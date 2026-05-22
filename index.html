@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Portfolio Rafif Zahid Akhtar — Designer, Creative, Astronomy Enthusiast"/>
+  <title>Rafif Zahid Akhtar — Designer • Creative • Astronomy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    /* =============================================
+       ROOT VARIABLES — ubah warna di sini
+    ============================================= */
+    :root {
+      --bg:        #020b18;
+      --bg-card:   rgba(10,30,70,0.65);
+      --accent:    #3a8fff;
+      --accent2:   #ffe066;
+      --text:      #c8e0ff;
+      --text-mute: #4a7aaa;
+      --border:    rgba(60,130,220,0.28);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* =============================================
+       CURSOR — planet + orbit ring
+    ============================================= */
+    #cursor-planet {
+      position: fixed;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #6ab4ff, #1a4a8a 60%, #0a1e3d);
+      box-shadow: 0 0 10px #3a8fff88, 0 0 3px #fff4;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .2s, height .2s;
+    }
+    #cursor-orbit {
+      position: fixed;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(100,180,255,0.45);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: left .1s ease, top .1s ease, width .25s, height .25s, border-color .25s;
+    }
+    #cursor-orbit::before {
+      content: '★';
+      position: absolute;
+      top: -8px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--accent2);
+    }
+
+    /* =============================================
+       STAR CANVAS
+    ============================================= */
+    #starCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* =============================================
+       NEBULA BLOBS
+    ============================================= */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(60px);
+      animation: floatBlob linear infinite;
+    }
+    @keyframes floatBlob {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-28px) scale(1.06); }
+    }
+
+    /* =============================================
+       LAYOUT
+    ============================================= */
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 2;
+    }
+    section { padding: 5.5rem 0; }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(2,11,24,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: .9rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Orbitron', monospace;
+      font-size: .6rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: .58rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: .35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      animation: pulse 3s ease infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(58,143,255,.4); }
+      50%      { box-shadow: 0 0 0 10px rgba(58,143,255,0); }
+    }
+    #hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 5.5vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #e8f4ff;
+      text-shadow: 0 0 30px #3a8fff44;
+      line-height: 1.1;
+      margin-bottom: .8rem;
+    }
+    #hero h1 span {
+      display: inline-block;
+      cursor: none;
+      transition: transform .2s cubic-bezier(.36,.07,.19,.97), color .2s;
+    }
+    #hero h1 span:hover {
+      color: var(--accent2);
+      text-shadow: 0 0 14px var(--accent2);
+      animation: letterPop .45s cubic-bezier(.36,.07,.19,.97) forwards;
+    }
+    @keyframes letterPop {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); }
+      25%  { transform: translateY(-20px) rotate(-10deg) scale(1.35); }
+      60%  { transform: translateY(6px) rotate(5deg) scale(.95); }
+      100% { transform: translateY(0) rotate(0deg) scale(1); }
+    }
+    .hero-roles {
+      font-family: 'Orbitron', monospace;
+      font-size: .75rem;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+    }
+    .hero-quote {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text-mute);
+      border-left: 2px solid var(--accent);
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+      max-width: 500px;
+      line-height: 1.7;
+    }
+    .hero-desc {
+      font-size: .95rem;
+      color: var(--text-mute);
+      max-width: 520px;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn {
+      display: inline-block;
+      padding: .75rem 2rem;
+      border-radius: 999px;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: .65rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: none;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      transition: background .15s, color .15s, box-shadow .15s;
+    }
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 22px rgba(58,143,255,.5);
+      animation: btnShake .4s ease;
+    }
+    @keyframes btnShake {
+      0%,100% { transform: translateX(0); }
+      20%  { transform: translateX(-5px) rotate(-1.5deg); }
+      40%  { transform: translateX(5px) rotate(1.5deg); }
+      60%  { transform: translateX(-3px); }
+      80%  { transform: translateX(2px); }
+    }
+    .btn-solid { background: rgba(58,143,255,.15); color: #e8f4ff; }
+    .btn-solid:hover { background: var(--accent); color: var(--bg); }
+
+    /* =============================================
+       SECTION LABELS
+    ============================================= */
+    .section-label {
+      font-family: 'Orbitron', monospace;
+      font-size: .58rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .75rem;
+    }
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 900;
+      color: #e8f4ff;
+      text-shadow: 0 0 20px #3a8fff22;
+      margin-bottom: 2.8rem;
+    }
+    .divider { width: 50px; height: 1px; background: var(--accent); margin: -2rem 0 2.5rem; opacity: .5; }
+
+    /* =============================================
+       ABOUT SECTION
+    ============================================= */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    @media(max-width:640px){ .about-grid { grid-template-columns: 1fr; } }
+    .about-text p {
+      font-size: .92rem;
+      color: var(--text-mute);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .about-dream {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: 'Orbitron', monospace;
+      font-size: .6rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      border: 1px solid rgba(255,224,102,.3);
+      padding: .4rem 1rem;
+      border-radius: 999px;
+      margin-top: .5rem;
+    }
+    .about-img-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    .about-img-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 1px dashed rgba(58,143,255,.3);
+      animation: spinRing 18s linear infinite;
+    }
+    .about-img-wrap::after {
+      content: '🔭';
+      position: absolute;
+      top: -6px; right: calc(50% - 70px);
+      font-size: 1.4rem;
+      animation: spinRing 18s linear infinite;
+    }
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+    .about-img {
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(58,143,255,.4);
+      box-shadow: 0 0 30px rgba(58,143,255,.25);
+    }
+
+    /* =============================================
+       SKILL CARDS
+    ============================================= */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1.2rem;
+      text-align: center;
+      cursor: none;
+      backdrop-filter: blur(6px);
+      transition: transform .18s ease, border-color .18s, box-shadow .18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(58,143,255,.15) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity .3s;
+      pointer-events: none;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover {
+      transform: rotate(var(--r,-2deg)) scale(1.06) translateY(-8px);
+      border-color: var(--accent);
+      box-shadow: 0 0 24px rgba(26,90,187,.4);
+      z-index: 2;
+    }
+    .card-icon { font-size: 2.2rem; display: block; margin-bottom: .6rem; }
+    .card:hover .card-icon { animation: wiggle .5s ease; }
+    @keyframes wiggle {
+      0%,100% { transform: rotate(0) scale(1); }
+      20%  { transform: rotate(-14deg) scale(1.25); }
+      40%  { transform: rotate(10deg) scale(1.3); }
+      65%  { transform: rotate(-5deg) scale(1.1); }
+      80%  { transform: rotate(3deg) scale(1.05); }
+    }
+    .card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: .7rem;
+      font-weight: 700;
+      color: #9dcfff;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: .35rem;
+    }
+    .card p { font-size: .78rem; color: var(--text-mute); line-height: 1.55; }
+
+    /* =============================================
+       PROJECTS
+    ============================================= */
+    .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.5rem; }
+    .project-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      cursor: none;
+      backdrop-filter: blur(6px);
+      transition: transform .18s, border-color .18s, box-shadow .18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      transform: scaleX(0);
+      transition: transform .35s ease;
+    }
+    .project-card:hover::after { transform: scaleX(1); }
+    .project-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+      box-shadow: 0 0 28px rgba(26,90,187,.3);
+    }
+    .project-num {
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+      margin-bottom: .8rem;
+    }
+    .project-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: .9rem;
+      font-weight: 700;
+      color: #e8f4ff;
+      margin-bottom: .5rem;
+    }
+    .project-card p { font-size: .8rem; color: var(--text-mute); line-height: 1.65; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
+    .tag {
+      font-family: 'Orbitron', monospace;
+      font-size: .52rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(58,143,255,.1);
+      border: 0.5px solid rgba(58,143,255,.3);
+      padding: .25rem .65rem;
+      border-radius: 999px;
+    }
+
+    /* =============================================
+       EDUCATION ZIGZAG TIMELINE
+    ============================================= */
+    .edu-timeline {
+      position: relative;
+      padding: 1rem 0 2rem;
+    }
+    /* vertical center line */
+    .edu-timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: 0; bottom: 0;
+      width: 1px;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, transparent, var(--accent) 8%, var(--accent) 92%, transparent);
+      opacity: .4;
+    }
+
+    .edu-row {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      align-items: start;
+      margin-bottom: 2.8rem;
+      position: relative;
+    }
+    .edu-row:last-child { margin-bottom: 0; }
+
+    /* node dot on center line */
+    .edu-node {
+      grid-column: 2;
+      display: flex;
+      justify-content: center;
+      padding-top: 1.4rem;
+      position: relative;
+      z-index: 2;
+    }
+    .edu-node-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 10px rgba(58,143,255,.5);
+      transition: background .3s, box-shadow .3s;
+    }
+    .edu-row.active .edu-node-dot {
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(58,143,255,.8);
+    }
+    /* active node pulse for current school */
+    .edu-node-dot.current {
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(58,143,255,.6);
+      animation: nodePulse 2.5s ease infinite;
+    }
+    @keyframes nodePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(58,143,255,.6); }
+      70%  { box-shadow: 0 0 0 10px rgba(58,143,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(58,143,255,0); }
+    }
+
+    /* card left / right placement */
+    .edu-card-wrap {
+      padding: 0 .6rem;
+    }
+    .edu-row-left  .edu-card-wrap:first-child { grid-column: 1; }
+    .edu-row-left  .edu-card-wrap:last-child  { grid-column: 3; visibility: hidden; }
+    .edu-row-right .edu-card-wrap:first-child { grid-column: 1; visibility: hidden; }
+    .edu-row-right .edu-card-wrap:last-child  { grid-column: 3; }
+
+    /* card itself */
+    .edu-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+      transition: border-color .25s, box-shadow .25s;
+      cursor: none;
+    }
+    .edu-card.open {
+      border-color: var(--accent);
+      box-shadow: 0 0 22px rgba(58,143,255,.25);
+    }
+
+    .edu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.2rem;
+      gap: .8rem;
+      cursor: none;
+      user-select: none;
+    }
+    .edu-header-left { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+    .edu-badge-row {
+      display: flex; align-items: center; gap: .5rem; margin-bottom: .3rem; flex-wrap: wrap;
+    }
+    .edu-badge {
+      font-family: 'Orbitron', monospace;
+      font-size: .5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: .18rem .55rem;
+      border-radius: 6px;
+      background: rgba(58,143,255,.18);
+      color: var(--accent);
+      border: 0.5px solid rgba(58,143,255,.4);
+    }
+    .edu-badge.current-badge {
+      background: rgba(58,143,255,.35);
+      color: #9dcfff;
+      border-color: var(--accent);
+    }
+    .edu-status {
+      font-family: 'Orbitron', monospace;
+      font-size: .48rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      background: rgba(60,220,120,.12);
+      color: #4de890;
+      border: 0.5px solid rgba(60,220,120,.3);
+    }
+    .edu-rating { font-size: .7rem; color: var(--accent2); }
+
+    .edu-name {
+      font-family: 'Orbitron', monospace;
+      font-size: .78rem;
+      font-weight: 700;
+      color: #e8f4ff;
+      margin-bottom: .15rem;
+      line-height: 1.3;
+    }
+    .edu-type { font-size: .72rem; color: var(--text-mute); }
+
+    .edu-chevron {
+      color: var(--text-mute);
+      font-size: 1rem;
+      transition: transform .3s ease, color .25s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .edu-card.open .edu-chevron { transform: rotate(180deg); color: var(--accent); }
+
+    /* chips */
+    .edu-chips {
+      display: flex; gap: .4rem; flex-wrap: wrap;
+      padding: 0 1.2rem .85rem;
+    }
+    .edu-chip {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-family: 'Orbitron', monospace;
+      font-size: .48rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(58,143,255,.07);
+      border: 0.5px solid rgba(58,143,255,.22);
+      padding: .22rem .6rem;
+      border-radius: 999px;
+      cursor: none;
+      text-decoration: none;
+      transition: background .2s, border-color .2s;
+    }
+    .edu-chip:hover { background: rgba(58,143,255,.2); border-color: var(--accent); }
+
+    /* accordion body */
+    .edu-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease;
+      opacity: 0;
+    }
+    .edu-card.open .edu-body { opacity: 1; }
+    .edu-body-inner {
+      padding: 1rem 1.2rem 1.2rem;
+      border-top: 0.5px solid var(--border);
+    }
+    .edu-section-label {
+      font-family: 'Orbitron', monospace;
+      font-size: .52rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .45rem;
+    }
+    .edu-body-inner p {
+      font-size: .8rem;
+      color: var(--text-mute);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+    .edu-body-inner p:last-child { margin-bottom: 0; }
+
+    /* responsive: stack on small screens */
+    @media (max-width: 600px) {
+      .edu-timeline::before { left: 20px; transform: none; }
+      .edu-row { grid-template-columns: 40px 1fr; }
+      .edu-node { grid-column: 1; padding-top: 1.2rem; }
+      .edu-row-left  .edu-card-wrap:first-child,
+      .edu-row-right .edu-card-wrap:last-child { grid-column: 2; visibility: visible; }
+      .edu-row-left  .edu-card-wrap:last-child,
+      .edu-row-right .edu-card-wrap:first-child { display: none; }
+    }
+
+    /* =============================================
+       CONTACT
+    ============================================= */
+    #contact { text-align: center; }
+    #contact .section-title { margin-bottom: 1rem; }
+    #contact > .container > p { color: var(--text-mute); margin-bottom: 2.5rem; font-size: .92rem; line-height: 1.7; }
+    .contact-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Orbitron', monospace;
+      font-size: .55rem;
+      letter-spacing: 2px;
+      color: #1e3a5f;
+      text-transform: uppercase;
+      border-top: 0.5px solid var(--border);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <div id="cursor-planet"></div>
+  <div id="cursor-orbit"></div>
+  <canvas id="starCanvas"></canvas>
+
+  <!-- Nebula -->
+  <div class="blob" style="width:380px;height:380px;background:#0d2a6e;opacity:.4;top:-100px;left:-120px;animation-duration:11s;"></div>
+  <div class="blob" style="width:260px;height:260px;background:#0a1e5e;opacity:.32;bottom:-80px;right:-80px;animation-duration:14s;animation-delay:-5s;"></div>
+  <div class="blob" style="width:160px;height:160px;background:#163566;opacity:.28;top:45%;left:78%;animation-duration:9s;animation-delay:-2s;"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">RAFIF.DEV</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Proyek</a></li>
+      <li><a href="#education">Pendidikan</a></li>
+      <li><a href="#contact">Kontak</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container">
+      <span class="hero-badge">✦ Siswa Kelas 11 · SMKN 3 Kota Bekasi</span>
+      <h1 id="hero-name"></h1>
+      <p class="hero-roles">Designer &nbsp;•&nbsp; Creative &nbsp;•&nbsp; Gamers &nbsp;•&nbsp; Astronomy</p>
+      <blockquote class="hero-quote">
+        "Kesuksesan bukan milik yang paling pintar, tapi milik mereka yang tidak berhenti mencoba."
+      </blockquote>
+      <p class="hero-desc">
+        Seorang pelajar yang sedang berproses — dengan minat besar di astronomi, desain, dan kreativitas. Percaya bahwa belajar bisa dari mana saja, kapan saja.
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-solid">Lihat Proyek</a>
+        <a href="#contact" class="btn">Hubungi Saya</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <p class="section-label reveal">✦ Siapa saya</p>
+      <h2 class="section-title reveal">Tentang Saya</h2>
+      <div class="divider reveal"></div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>Halo! Saya <strong style="color:#e8f4ff;">Rafif Zahid Akhtar</strong>, seorang siswa kelas 11 yang sedang berproses menuju kelas 12. Saat ini saya memiliki ketertarikan besar dalam dunia astronomi, yang saya pelajari secara mandiri melalui berbagai sumber, termasuk video edukatif di TikTok.</p>
+          <p>Saya juga tertarik dalam bidang desain dan kreativitas — karena bagi saya, kreativitas adalah cara untuk mengekspresikan ide dan membangun sesuatu yang bermakna.</p>
+          <p>Saya percaya bahwa belajar tidak harus selalu di dalam kelas, tetapi bisa dari mana saja selama ada kemauan.</p>
+          <span class="about-dream">🚀 Impian: Institut Teknologi Bandung (ITB)</span>
+        </div>
+        <div class="about-img-wrap reveal">
+          <img
+            class="about-img"
+            src="https://v0-website-with-about-page.vercel.app/images/rafif-photo.jpeg"
+            alt="Rafif Zahid Akhtar"
+            onerror="this.style.display='none'"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <p class="section-label reveal">✦ Apa yang saya kuasai</p>
+      <h2 class="section-title reveal">Keahlian</h2>
+      <div class="divider reveal"></div>
+      <div class="cards">
+        <div class="card reveal" style="--r:-3deg">
+          <span class="card-icon">🔭</span>
+          <h3>Astronomi</h3>
+          <p>Mempelajari alam semesta secara mandiri melalui berbagai sumber edukatif</p>
+        </div>
+        <div class="card reveal" style="--r:2deg">
+          <span class="card-icon">🎨</span>
+          <h3>UI/UX Design</h3>
+          <p>Membuat tampilan antarmuka yang intuitif dan indah untuk pengguna</p>
+        </div>
+        <div class="card reveal" style="--r:-1.5deg">
+          <span class="card-icon">🧩</span>
+          <h3>Problem Solving</h3>
+          <p>Terbiasa menganalisis error koding dan menemukan solusi jaringan yang efektif</p>
+        </div>
+        <div class="card reveal" style="--r:3deg">
+          <span class="card-icon">🗺️</span>
+          <h3>Explore</h3>
+          <p>Suka mengeksplor tempat baru dan hal-hal yang jarang dijamah orang lain</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <p class="section-label reveal">✦ Hasil karya</p>
+      <h2 class="section-title reveal">Proyek Terbaru</h2>
+      <div class="divider reveal"></div>
+      <div class="projects">
+        <div class="project-card reveal">
+          <p class="project-num">PROYEK · 01</p>
+          <h3>Tipping Platform</h3>
+          <p>Platform tipping yang memungkinkan pengguna mendukung kreator melalui donasi dan pembayaran digital yang mudah.</p>
+          <div class="project-tags">
+            <span class="tag">Innovation</span>
+            <span class="tag">Investment</span>
+            <span class="tag">UI/UX</span>
+          </div>
+        </div>
+        <div class="project-card reveal">
+          <p class="project-num">PROYEK · 02</p>
+          <h3>Problem Solving Tools</h3>
+          <p>Terbiasa mencari solusi saat terjadi error pada koding atau kegagalan koneksi jaringan. Setiap masalah punya solusinya.</p>
+          <div class="project-tags">
+            <span class="tag">Debugging</span>
+            <span class="tag">Network</span>
+            <span class="tag">Analysis</span>
+          </div>
+        </div>
+        <div class="project-card reveal">
+          <p class="project-num">PROYEK · 03</p>
+          <h3>Portfolio Website</h3>
+          <p>Website portofolio personal yang menampilkan karya, keahlian, dan perjalanan sebagai desainer kreatif.</p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">Design</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="container">
+      <p class="section-label reveal">✦ Perjalanan belajar</p>
+      <h2 class="section-title reveal">Pendidikan</h2>
+      <div class="divider reveal"></div>
+      <div class="edu-list">
+
+        <!-- SD Teratai -->
+        <div class="edu-card reveal" data-edu="0">
+          <div class="edu-header">
+            <div class="edu-header-left">
+              <div class="edu-dot">SD</div>
+              <div class="edu-meta">
+                <div class="edu-name">SD Islam Teratai Putih Global</div>
+                <div class="edu-sub">
+                  <span class="edu-type">Elementary School</span>
+                  <span class="edu-status">Open</span>
+                </div>
+              </div>
+            </div>
+            <span class="edu-chevron">▾</span>
+          </div>
+          <div class="edu-chips">
+            <span class="edu-chip">📍 Directions</span>
+            <a class="edu-chip" href="tel:02182609304">📞 (021) 82609304</a>
+          </div>
+          <div class="edu-body">
+            <div class="edu-body-inner">
+              <p>SD Islam Teratai Putih Global merupakan sekolah dasar berbasis Islam yang berkomitmen menciptakan generasi cerdas, kreatif, dan berakhlak mulia. Dengan lingkungan belajar yang nyaman serta tenaga pengajar profesional, sekolah ini menghadirkan pendidikan akademik dan pembentukan karakter secara seimbang.</p>
+              <p class="edu-section-label">✦ Pembelajaran</p>
+              <p>Proses pembelajaran menggabungkan kurikulum nasional dengan pendidikan Islami. Siswa dibimbing untuk aktif, disiplin, serta memiliki kemampuan literasi, numerasi, dan kreativitas sejak dini. Selain pembelajaran di kelas, sekolah juga menyediakan kegiatan pengembangan bakat, keagamaan, dan pembiasaan karakter positif agar siswa siap menghadapi masa depan.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MI Al-Chaeriyah -->
+        <div class="edu-card reveal" data-edu="1">
+          <div class="edu-header">
+            <div class="edu-header-left">
+              <div class="edu-dot">SD</div>
+              <div class="edu-meta">
+                <div class="edu-name">MI Al-Chaeriyah</div>
+                <div class="edu-sub">
+                  <span class="edu-type">Primary School</span>
+                  <span class="edu-status">Open</span>
+                </div>
+              </div>
+            </div>
+            <span class="edu-chevron">▾</span>
+          </div>
+          <div class="edu-chips">
+            <span class="edu-chip">📍 Directions</span>
+          </div>
+          <div class="edu-body">
+            <div class="edu-body-inner">
+              <p>MI Al Chaeriyah adalah madrasah ibtidaiyah yang fokus pada pendidikan dasar berbasis nilai-nilai Islam dan pembentukan karakter siswa. Sekolah ini hadir sebagai tempat belajar yang mendukung perkembangan akademik sekaligus membangun moral dan kedisiplinan peserta didik dalam suasana religius dan nyaman.</p>
+              <p class="edu-section-label">✦ Pembelajaran</p>
+              <p>Kegiatan belajar memadukan pendidikan umum dengan pembelajaran agama Islam seperti Al-Qur'an, akhlak, dan ibadah sehari-hari. Metode pembelajaran dilakukan secara interaktif agar siswa lebih aktif, percaya diri, dan memiliki kemampuan berpikir kreatif serta bertanggung jawab dalam kehidupan sehari-hari.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SMP Assuryaniyah -->
+        <div class="edu-card reveal" data-edu="2">
+          <div class="edu-header">
+            <div class="edu-header-left">
+              <div class="edu-dot">SMP</div>
+              <div class="edu-meta">
+                <div class="edu-name">SMPI Assuryaniyah</div>
+                <div class="edu-sub">
+                  <span class="edu-type">Secondary School</span>
+                  <span class="edu-status">Open</span>
+                </div>
+              </div>
+            </div>
+            <span class="edu-chevron">▾</span>
+          </div>
+          <div class="edu-chips">
+            <span class="edu-chip">📍 Directions</span>
+            <a class="edu-chip" href="tel:02182626924">📞 (021) 82626924</a>
+          </div>
+          <div class="edu-body">
+            <div class="edu-body-inner">
+              <p>SMP MBQ Assuryaniyah merupakan sekolah menengah berbasis pesantren yang mengedepankan pendidikan akademik, tahfidz Al-Qur'an, dan pembinaan karakter Islami. Sekolah ini dikenal dengan lingkungan pendidikan yang religius, disiplin, dan mendukung pengembangan potensi siswa secara menyeluruh.</p>
+              <p class="edu-section-label">✦ Pembelajaran</p>
+              <p>Sistem pembelajaran mengintegrasikan kurikulum pendidikan nasional dengan program tahfidz dan pembelajaran diniyah. Siswa tidak hanya dibekali ilmu pengetahuan umum, tetapi juga diarahkan untuk memiliki hafalan Al-Qur'an, akhlak yang baik, serta kemampuan kepemimpinan dan kemandirian. Kegiatan belajar didukung dengan pembiasaan ibadah, literasi, dan pengembangan keterampilan siswa.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SMKN 3 -->
+        <div class="edu-card reveal" data-edu="3">
+          <div class="edu-header">
+            <div class="edu-header-left">
+              <div class="edu-dot">SMK</div>
+              <div class="edu-meta">
+                <div class="edu-name">SMK Negeri 3 Kota Bekasi</div>
+                <div class="edu-sub">
+                  <span class="edu-type">Vocational School</span>
+                  <span class="edu-status">Sekarang ✦</span>
+                  <span class="edu-rating">⭐ 3.7</span>
+                </div>
+              </div>
+            </div>
+            <span class="edu-chevron">▾</span>
+          </div>
+          <div class="edu-chips">
+            <span class="edu-chip">📍 Directions</span>
+            <a class="edu-chip" href="#">🌐 Website</a>
+            <a class="edu-chip" href="tel:02182616466">📞 (021) 82616466</a>
+          </div>
+          <div class="edu-body">
+            <div class="edu-body-inner">
+              <p>SMKN 3 Kota Bekasi adalah sekolah menengah kejuruan negeri yang berfokus pada pengembangan kompetensi siswa agar siap menghadapi dunia kerja maupun dunia industri. Dengan akreditasi A dan fasilitas pendukung pembelajaran yang lengkap, sekolah ini menjadi salah satu SMK unggulan di Kota Bekasi.</p>
+              <p class="edu-section-label">✦ Pembelajaran</p>
+              <p>Pembelajaran dirancang berbasis praktik dan kompetensi sesuai kebutuhan industri modern. Siswa mendapatkan pengalaman belajar melalui praktik laboratorium, teaching factory, sertifikasi kompetensi, serta pelatihan keterampilan kerja yang mendukung kesiapan karier. Sekolah juga menanamkan nilai disiplin, kreativitas, dan kemampuan teknologi agar lulusan mampu bersaing di era digital.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <p class="section-label reveal">✦ Ayo terhubung</p>
+      <h2 class="section-title reveal">Hubungi Saya</h2>
+      <p class="reveal">Punya proyek menarik atau sekadar ingin ngobrol tentang astronomi dan desain? Saya terbuka untuk kolaborasi dan hal-hal baru yang bermakna.</p>
+      <div class="contact-btns reveal">
+        <a href="mailto:rafif@example.com" class="btn btn-solid">✉ Email Saya</a>
+        <a href="https://linkedin.com" target="_blank" class="btn">LinkedIn</a>
+        <a href="https://github.com" target="_blank" class="btn">GitHub</a>
+        <a href="https://twitter.com" target="_blank" class="btn">Twitter</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    ⊹ © 2026 Rafif Zahid Akhtar · Designer • Creative • Astronomy ⊹
+  </footer>
+
+  <script>
+    // Nama hero (efek huruf loncat)
+    const nameEl = document.getElementById('hero-name');
+    "Rafif Zahid Akhtar".split('').forEach(c => {
+      const s = document.createElement('span');
+      s.innerHTML = c === ' ' ? '&nbsp;' : c;
+      nameEl.appendChild(s);
+    });
+
+    // Cursor
+    const planet = document.getElementById('cursor-planet');
+    const orbit  = document.getElementById('cursor-orbit');
+    let angle = 0;
+
+    document.addEventListener('mousemove', e => {
+      planet.style.left = e.clientX + 'px';
+      planet.style.top  = e.clientY + 'px';
+      setTimeout(() => {
+        orbit.style.left = e.clientX + 'px';
+        orbit.style.top  = e.clientY + 'px';
+      }, 75);
+    });
+
+    (function spin() {
+      angle = (angle + 1.2) % 360;
+      orbit.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+      requestAnimationFrame(spin);
+    })();
+
+    function setCursorSize(ps, os, oc) {
+      planet.style.width = planet.style.height = ps;
+      orbit.style.width  = orbit.style.height  = os;
+      orbit.style.borderColor = oc;
+    }
+    function resetCursor() { setCursorSize('18px','44px','rgba(100,180,255,.45)'); }
+
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+        card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+        setCursorSize('30px','60px','rgba(255,224,102,.65)');
+      });
+      card.addEventListener('mouseleave', resetCursor);
+    });
+
+    document.querySelectorAll('.btn,.project-card,.tl-item').forEach(el => {
+      el.addEventListener('mouseenter', () => setCursorSize('38px','76px','rgba(58,143,255,.75)'));
+      el.addEventListener('mouseleave', resetCursor);
+    });
+
+    // Stars
+    const canvas = document.getElementById('starCanvas');
+    const ctx    = canvas.getContext('2d');
+    let stars = [];
+
+    function initStars() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = Array.from({length:130}, () => ({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*1.5+.3,
+        speed: Math.random()*.008+.003,
+        phase: Math.random()*Math.PI*2
+      }));
+    }
+    initStars();
+    window.addEventListener('resize', initStars);
+
+    let f = 0;
+    (function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      f++;
+      stars.forEach(s => {
+        const a = .2 + .8*(0.5+0.5*Math.sin(f*s.speed+s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle = `rgba(200,224,255,${a.toFixed(2)})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    })();
+
+    // Education accordion
+    document.querySelectorAll('.edu-card').forEach(card => {
+      const header = card.querySelector('.edu-header');
+      const body   = card.querySelector('.edu-body');
+      const inner  = card.querySelector('.edu-body-inner');
+
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('open');
+        // close all
+        document.querySelectorAll('.edu-card.open').forEach(c => {
+          c.classList.remove('open');
+          c.querySelector('.edu-body').style.maxHeight = '0';
+        });
+        // open clicked if it was closed
+        if (!isOpen) {
+          card.classList.add('open');
+          body.style.maxHeight = inner.scrollHeight + 40 + 'px';
+        }
+      });
+
+      // cursor effect on header
+      header.addEventListener('mouseenter', () => setCursorSize('38px','76px','rgba(58,143,255,.75)'));
+      header.addEventListener('mouseleave', resetCursor);
+    });
+
+    // Scroll reveal
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach((e,i) => {
+        if(e.isIntersecting){
+          setTimeout(()=>e.target.classList.add('visible'), i*90);
+          obs.unobserve(e.target);
+        }
+      });
+    }, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
